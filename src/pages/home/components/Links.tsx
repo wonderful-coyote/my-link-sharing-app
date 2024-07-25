@@ -87,56 +87,50 @@ export default function Links() {
   };
 
   return (
-    <>
-      <section className="relative lg:p-10 lg:w-full lg:max-w-[900px] lg:mx-auto">
-        <div className="mb-6">
-          <h3 className="text-2xl font-bold">Customize your links</h3>
-          <p className="text-gray-600 mt-2">
-            Add/edit/remove links below and then share all your profiles with
-            the world!
-          </p>
-        </div>
-        <button
-          onClick={handleAddLink}
-          className="w-full mb-6 px-4 py-3 text-sm font-medium text-[#633CFF] bg-white border border-[#633CFF] rounded-lg hover:bg-[#633CFF] hover:text-white transition-colors flex items-center justify-center shadow-sm"
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">Customize your links</h1>
+      <p className="text-gray-600 mb-6">
+        Add/edit/remove links below and then share all your profiles with the
+        world!
+      </p>
+
+      <button
+        onClick={handleAddLink}
+        className="w-full py-3 mb-6 text-[#633CFF] font-bold bg-transparent border-2 border-[#633CFF] rounded-lg hover:bg-[#633CFF] hover:text-white transition-colors duration-200"
+      >
+        + Add new link
+      </button>
+
+      {links && links.length > 0 ? (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
         >
-          + Add new link
-        </button>
-        {links ? (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
+          <SortableContext
+            items={links.map((link) => link.id)}
+            strategy={verticalListSortingStrategy}
           >
-            <SortableContext
-              items={links.map((link) => link.id)}
-              strategy={verticalListSortingStrategy}
-            >
-              <div className="relative pb-20">
-                {links.length > 0 ? (
-                  links.map((link, index) => (
-                    <SortableLink key={link.id} link={link} index={index} />
-                  ))
-                ) : (
-                  <NoLinks />
-                )}
-              </div>
-            </SortableContext>
-          </DndContext>
-        ) : (
-          <NoLinks />
-        )}
-        <div className="absolute -bottom-6 -left-6 -right-6 p-4 border-t border-gray-200 lg:left-0 lg:right-0">
-          <Button
-            disabled={!links || links.length === 0}
-            onClick={handleSave}
-            className="sm:block sm:w-[91px] sm:ml-auto sm:mr-6"
-          >
-            Save
-          </Button>
-        </div>
-      </section>
+            <div className="relative pb-20">
+              {links.map((link, index) => (
+                <SortableLink key={link.id} link={link} index={index} />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
+      ) : (
+        <NoLinks />
+      )}
+
+      <Button
+        disabled={!links || links.length === 0}
+        onClick={handleSave}
+        className="py-3 mt-6 text-white font-bold bg-[#633CFF] rounded-lg hover:bg-[#633CFF] transition-colors duration-200"
+      >
+        Save
+      </Button>
+
       <ToastContainer />
-    </>
+    </div>
   );
 }
