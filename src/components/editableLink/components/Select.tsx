@@ -1,9 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { PLATFORMS } from "../../../lib/platforms";
-import Option from "./Option";
 import { getPlatformIcon } from "../../../lib/platformIcons";
-import Chevron from "../../../assets/platformicons/Chevron";
 import { PlatformType } from "@/types";
+import Option from "./Option";
+import Chevron from "../../../assets/platformicons/Chevron";
 
 interface SelectProps {
   selectedPlatform: PlatformType;
@@ -14,40 +14,38 @@ export default function Select({
   selectedPlatform,
   changePlatform,
 }: SelectProps) {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleClick = (platform: PlatformType) => {
+  const handlePlatformSelect = (platform: PlatformType) => {
     changePlatform(platform);
-    setIsVisible(false);
+    setIsOpen(false);
   };
 
   return (
-    <label className="relative">
-      {getPlatformIcon(selectedPlatform)}
-
-      <span className="sr-only">Platform</span>
-
+    <div className="relative">
       <div
-        className="flex items-center overflow-hidden pl-11 text-base text-gray-700 h-12 transition-all duration-300 ease-in-out cursor-pointer border border-gray-300 rounded-lg hover:border-purple-600 hover:shadow-lg hover:shadow-purple-200 focus:border-purple-600 focus:shadow-lg focus:shadow-purple-200"
-        onClick={() => setIsVisible(!isVisible)}
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center justify-between p-4 bg-white border border-gray-300 rounded-lg cursor-pointer"
       >
-        {selectedPlatform}
-
-        <Chevron className="absolute right-4 bottom-4.5 transform origin-center transition-transform duration-300 ease-in-out" />
+        <div className="flex items-center">
+          {getPlatformIcon(selectedPlatform)}
+          <span className="ml-3 text-gray-700">{selectedPlatform}</span>
+        </div>
+        <Chevron
+          className={`transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+        />
       </div>
-
-      <div
-        className={`absolute w-full top-[86px] overflow-hidden px-4 bg-white transition-all duration-300 ease-in-out z-2 ${isVisible ? "h-[690px] shadow-lg" : "h-0"}`}
-        aria-hidden={!isVisible}
-      >
-        {(Object.values(PLATFORMS) as PlatformType[]).map((platform) => (
-          <Option
-            key={crypto.randomUUID()}
-            platform={platform}
-            onClick={() => handleClick(platform)}
-          />
-        ))}
-      </div>
-    </label>
+      {isOpen && (
+        <div className="absolute w-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto z-10">
+          {(Object.keys(PLATFORMS) as PlatformType[]).map((platform) => (
+            <Option
+              key={platform}
+              platform={platform}
+              onClick={() => handlePlatformSelect(platform)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

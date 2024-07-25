@@ -1,19 +1,20 @@
+import React from "react";
 import { getPlatformIcon } from "../../../lib/platformIcons";
+import { PlatformType } from "@/types";
 
-export default function Option({
-  platform,
-  onClick,
-}: {
-  platform: string;
+interface OptionProps {
+  platform: PlatformType;
   onClick: () => void;
-}) {
+}
+
+export default function Option({ platform, onClick }: OptionProps) {
   return (
     <div
       onClick={onClick}
-      className="flex items-center gap-3 py-3 cursor-pointer transition-all duration-300 ease-in-out hover:text-purple-600 focus:text-purple-600 [&:not(:last-child)]:border-b [&:not(:last-child)]:border-gray-200 [&:not(:nth-of-type(8)):hover_path]:fill-purple-600 [&:not(:nth-of-type(8)):focus_path]:fill-purple-600 [&:nth-of-type(8):hover_path:first-child]:fill-purple-600 [&:nth-of-type(8):focus_path:first-child]:fill-purple-600"
+      className="flex items-center gap-3 p-4 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
     >
       {getPlatformIcon(platform)}
-      {platform}
+      <span>{platform}</span>
     </div>
   );
 }

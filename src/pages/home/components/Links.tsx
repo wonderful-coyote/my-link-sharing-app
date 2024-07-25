@@ -1,106 +1,62 @@
-import { useContext, useEffect, useRef, useState } from "react";
+// components/Links.tsx
+import React, { useContext } from "react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+
 import Button from "@/components/button";
 import NoLinks from "./NoLinks";
-import EditableLink from "../../../components/editableLink/EditableLink";
+import SortableLink from "./SortableLink";
 import { DataContext } from "@/context/DataContext";
 import useForm from "../../../hooks/useForm";
 import SavedIcon from "@/assets/platformicons/SavedIcon";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "@/types"; // Import the Link type
+import { Link } from "@/types";
 
 export default function Links() {
-  const { links, addLink, reorderLinks, saveLinksToDb } =
-    useContext(DataContext);
-
-  const [dragIdx, setDragIdx] = useState<number | null>(null);
-  const [targetLink, setTargetLink] = useState<Link | null>(null);
-
-  const linksRef = useRef<HTMLDivElement>(null);
-  const copyRef = useRef<HTMLDivElement>(null);
-
+  const { links, addLink, saveLinksToDb, reorderLinks } =
+    useContext(DataContext) || {};
   const { validateURL, submitForm } = useForm(saveLinksToDb);
 
-  const dragEventListener = (e: MouseEvent) => {
-    const mousePosition = e.clientY;
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
 
-    if (linksRef.current && copyRef.current) {
-      const children = Array.from(linksRef.current.children).filter(
-        (child) => child.getAttribute("data-copy") !== "true",
-      );
-
-      const { top, height } = linksRef.current.getBoundingClientRect();
-      const divHeight = copyRef.current.getBoundingClientRect().height;
-
-      const maxHeight = 0;
-      const minHeight = height - divHeight;
-
-      const newPosition = mousePosition - top - 30;
-
-      copyRef.current.style.top =
-        newPosition < maxHeight
-          ? maxHeight + "px"
-          : newPosition > minHeight
-            ? minHeight + "px"
-            : newPosition + "px";
-
-      children.forEach((child, idx) => {
-        const childTop = (child as HTMLElement).offsetTop;
-
-        if (
-          Math.abs(childTop - newPosition) < 100 &&
-          idx !== dragIdx &&
-          copyRef.current
-        ) {
-          reorderLinks(copyRef.current.id, idx);
-        }
-      });
-    }
-  };
-
-  const startDrag = (id: string) => {
-    const targetLink = links.find((link) => link.id === id);
-
-    if (!targetLink) return;
-
-    const targetIdx = links.indexOf(targetLink);
-
-    setDragIdx(targetIdx);
-    setTargetLink(targetLink);
-
-    window.addEventListener("mousemove", dragEventListener as EventListener);
-    window.addEventListener("mouseup", endDrag);
-  };
-
-  const endDrag = () => {
-    if (copyRef.current) {
-      if (copyRef.current.parentElement) {
-        copyRef.current.style.top = "";
-
-        setTargetLink(null);
-        setDragIdx(null);
-
-        window.removeEventListener(
-          "mousemove",
-          dragEventListener as EventListener,
-        );
-      }
+  const handleAddLink = () => {
+    if (addLink) {
+      addLink();
+    } else {
+      console.error("addLink function is not available in the context");
     }
   };
 
   const handleSave = () => {
-    let isValid = true;
+    if (!links) return;
 
+    let isValid = true;
     links.forEach((link) => {
       if (!validateURL(link)) {
         isValid = false;
       }
     });
-
     if (!isValid) {
       return;
     }
-
     submitForm();
     toast.success(
       <div className="flex items-center">
@@ -119,13 +75,16 @@ export default function Links() {
     );
   };
 
-  useEffect(() => {
-    if (targetLink && copyRef.current && dragIdx != null) {
-      const { height } = copyRef.current.getBoundingClientRect();
-      const initialTop = dragIdx * height + "px";
-      copyRef.current.style.top = initialTop;
+  const handleDragEnd = (event: DragEndEvent) => {
+    if (!links) return;
+
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      const newIndex = links.findIndex((link: Link) => link.id === over?.id);
+      reorderLinks(active.id as string, newIndex);
     }
-  }, [targetLink, dragIdx]);
+  };
 
   return (
     <>
@@ -136,37 +95,37 @@ export default function Links() {
             Add/edit/remove links below and then share all your profiles with
             the world!
           </p>
-          <Button onClick={addLink} className="mt-10 mb-6">
-            &#43; Add new link
-          </Button>
         </div>
-
-        <div className="relative pb-20" ref={linksRef}>
-          {links?.length > 0 ? (
-            links.map((link, idx) => (
-              <EditableLink
-                key={link.id}
-                index={idx}
-                isDragging={targetLink?.id === link.id}
-                startDrag={startDrag}
-                {...link}
-              />
-            ))
-          ) : (
-            <NoLinks />
-          )}
-
-          {targetLink && (
-            <EditableLink
-              index={dragIdx as number}
-              copyRef={copyRef}
-              isDragging={false}
-              startDrag={startDrag}
-              {...targetLink}
-            />
-          )}
-        </div>
-
+        <button
+          onClick={handleAddLink}
+          className="w-full mb-6 px-4 py-3 text-sm font-medium text-[#633CFF] bg-white border border-[#633CFF] rounded-lg hover:bg-[#633CFF] hover:text-white transition-colors flex items-center justify-center shadow-sm"
+        >
+          + Add new link
+        </button>
+        {links ? (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={links.map((link) => link.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="relative pb-20">
+                {links.length > 0 ? (
+                  links.map((link, index) => (
+                    <SortableLink key={link.id} link={link} index={index} />
+                  ))
+                ) : (
+                  <NoLinks />
+                )}
+              </div>
+            </SortableContext>
+          </DndContext>
+        ) : (
+          <NoLinks />
+        )}
         <div className="absolute -bottom-6 -left-6 -right-6 p-4 border-t border-gray-200 lg:left-0 lg:right-0">
           <Button
             disabled={!links || links.length === 0}
@@ -177,7 +136,6 @@ export default function Links() {
           </Button>
         </div>
       </section>
-
       <ToastContainer />
     </>
   );

@@ -58,9 +58,7 @@ export interface DataContextType {
   updateLink: (updatedLink: Link) => void;
   addRef: (id: string, ref: RefObject<HTMLInputElement>) => void;
   reorderLinks: (targetId: string, newIdx: number) => void;
-  updateFirstName: (newName: string) => void;
-  updateLastName: (newName: string) => void;
-  updateEmail: (newEmail: string) => void;
+  updateUserInfo: (field: keyof UserInfo, value: string) => void;
   previewImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
   saveLinksToDb: () => Promise<null>;
   saveUserInfoToDb: () => Promise<null>;
