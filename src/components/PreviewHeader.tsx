@@ -10,7 +10,7 @@ const PreviewHeader: React.FC<PreviewHeaderProps> = ({
   onShareClick,
 }) => {
   return (
-    <div className="bg-white p-4 rounded-xl">
+    <div className="bg-white px-4 py-3 rounded-xl">
       <header className="flex items-center justify-between mx-auto">
         <button
           onClick={onBackClick}

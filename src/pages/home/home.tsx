@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import Header from "@/components/header";
 import Links from "./components/Links";
 import Profile from "./components/Profile";
-import PreviewProfile from "@/components/previewProfile";
 import Phone from "@/assets/platformicons/Phone";
 import AuthenticatedLayout from "@/components/AuthenticatedLayout";
 
@@ -35,14 +34,11 @@ export default function Home() {
         activeSection={activeSection}
         onSectionChange={setActiveSection}
       />
-      <main className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gray-100">
-        <section className="w-full md:w-1/2 p-4">
-          <div className="flex justify-center items-center">
-            <Phone />
-            <PreviewProfile userData={userData} bare />
-          </div>
+      <main className="flex flex-col lg:flex-row items-stretch justify-center min-h-screen bg-gray-100 p-4 lg:gap-4">
+        <section className="hidden lg:flex lg:w-1/3 p-4 bg-white items-center justify-center">
+          <Phone userData={userData} />
         </section>
-        <section className="w-full md:w-1/2 p-4">
+        <section className="w-full lg:w-2/3 p-4 bg-white flex items-center justify-center">
           {activeSection === "links" ? <Links /> : <Profile />}
         </section>
       </main>

@@ -37,7 +37,7 @@ const PreviewPage: React.FC = () => {
       </div>
       <div className="bg-white flex-grow" />
       <div className="absolute top-[15vh] left-0 right-0 flex flex-col items-center">
-        <Phone />
+        <Phone userData={userData} />
         <div className="mt-8">
           <PreviewProfile userData={userData} bare />
         </div>
