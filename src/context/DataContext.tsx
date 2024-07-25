@@ -120,6 +120,18 @@ export default function DataProvider({ children }: { children: ReactNode }) {
     }));
   };
 
+  const updateFirstName = (value: string) => {
+    updateUserInfo("firstName", value);
+  };
+
+  const updateLastName = (value: string) => {
+    updateUserInfo("lastName", value);
+  };
+
+  const updateEmail = (value: string) => {
+    updateUserInfo("email", value);
+  };
+
   const previewImg = (e: React.ChangeEvent<HTMLInputElement>) => {
     const images = e.target.files;
     if (!images || images.length === 0) return;
@@ -169,6 +181,9 @@ export default function DataProvider({ children }: { children: ReactNode }) {
     previewImg,
     saveLinksToDb,
     saveUserInfoToDb,
+    updateFirstName,
+    updateLastName,
+    updateEmail,
   };
 
   useEffect(() => {

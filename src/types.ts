@@ -62,4 +62,7 @@ export interface DataContextType {
   previewImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
   saveLinksToDb: () => Promise<null>;
   saveUserInfoToDb: () => Promise<null>;
+  updateFirstName: (value: string) => void; // Add this line
+  updateLastName: (value: string) => void; // Add this line
+  updateEmail: (value: string) => void;
 }
