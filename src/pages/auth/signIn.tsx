@@ -60,7 +60,7 @@ export default function SignIn() {
         pauseOnHover: true,
         draggable: true,
       });
-      router.replace("/authentication/signIn", undefined, { shallow: true });
+      router.replace("/auth/signIn", undefined, { shallow: true });
     } else if (error) {
       toast.error(error as string, {
         position: "top-center",
@@ -70,7 +70,7 @@ export default function SignIn() {
         pauseOnHover: true,
         draggable: true,
       });
-      router.replace("/authentication/signIn", undefined, { shallow: true });
+      router.replace("/auth/signIn", undefined, { shallow: true });
     }
   }, [router]);
 

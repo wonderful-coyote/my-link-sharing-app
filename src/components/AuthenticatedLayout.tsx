@@ -16,7 +16,7 @@ export default function AuthenticatedLayout({
 
   React.useEffect(() => {
     if (!user) {
-      router.push("/auth/signin");
+      router.push("/auth/signIn");
     }
   }, [user, router]);
 

@@ -11,7 +11,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!user) {
       // If there's no user, redirect to the login page
-      router.push("/authentication/signIn");
+      router.push("/auth/signIn");
     } else {
       setIsLoading(false);
     }
