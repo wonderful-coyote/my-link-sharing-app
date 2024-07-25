@@ -17,7 +17,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onSectionChange }) => {
   };
 
   return (
-    <div className="bg-gray-50 p-4">
+    <div className="bg-gray-100 p-4">
       <header className="flex items-center justify-between px-4 py-3 bg-white shadow-md rounded-lg">
         <div className="flex items-center">
           <Image
