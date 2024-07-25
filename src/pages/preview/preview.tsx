@@ -26,18 +26,19 @@ const PreviewPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="bg-blue-600 h-1/3 min-h-[33vh] relative">
-        <div className="absolute top-0 left-0 right-0 p-4">
+    <div className="min-h-screen flex flex-col relative">
+      <div className="bg-blue-600 h-1/3 min-h-[33vh]">
+        <div className="p-4">
           <PreviewHeader
             onBackClick={() => router.back()}
             onShareClick={handleShareLink}
           />
         </div>
       </div>
-      <div className="bg-white flex-grow flex justify-center items-start pt-16">
-        <div className="flex flex-col items-center -mt-48">
-          <Phone />
+      <div className="bg-white flex-grow" />
+      <div className="absolute top-[15vh] left-0 right-0 flex flex-col items-center">
+        <Phone />
+        <div className="mt-8">
           <PreviewProfile userData={userData} bare />
         </div>
       </div>

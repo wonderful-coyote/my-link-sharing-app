@@ -95,7 +95,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onSectionChange }) => {
 
         <button
           onClick={handlePreviewClick}
-          className="px-4 py-2 text-purple-600 border border-purple-600 rounded-lg hover:bg-purple-100 transition-colors"
+          className="px-4 py-2 text-[#633CFF] border border-[#633CFF] rounded-lg hover:bg-[#633CFF] hover:text-white transition-colors"
         >
           <span className="hidden sm:inline">Preview</span>
           <svg
