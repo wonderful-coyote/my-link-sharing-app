@@ -52,10 +52,26 @@ export default function Profile() {
     );
   };
 
+  const getDefaultProfileSvg = () => (
+    <svg
+      width="193"
+      height="193"
+      viewBox="0 0 193 193"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect width="193" height="193" rx="96.5" fill="#E5E7EB" />
+      <path
+        d="M96.5 96.5C107.27 96.5 116 87.7696 116 77C116 66.2304 107.27 57.5 96.5 57.5C85.7304 57.5 77 66.2304 77 77C77 87.7696 85.7304 96.5 96.5 96.5ZM96.5 106C81.6625 106 52 113.469 52 128.25V135.5H141V128.25C141 113.469 111.337 106 96.5 106Z"
+        fill="#9CA3AF"
+      />
+    </svg>
+  );
+
   const getImageSource = () => {
     if (imgPreviewPath) return imgPreviewPath;
     if (userInfo.profileImg) return userInfo.profileImg;
-    return "/default-avatar.png"; // Replace with your default image path
+    return ""; // Return null for default SVG
   };
 
   // Early return if userInfo is not available
@@ -81,12 +97,16 @@ export default function Profile() {
             <span className="text-gray-400 text-sm">Profile Picture</span>
 
             <div className="relative h-[193px] w-[193px] bg-purple-200 rounded-xl mt-4 mb-6 overflow-hidden">
-              <Image
-                src={getImageSource()}
-                alt="Profile picture"
-                layout="fill"
-                objectFit="cover"
-              />
+              {getImageSource() ? (
+                <Image
+                  src={getImageSource()}
+                  alt="Profile picture"
+                  layout="fill"
+                  objectFit="cover"
+                />
+              ) : (
+                getDefaultProfileSvg()
+              )}
 
               <input
                 type="file"
@@ -117,13 +137,14 @@ export default function Profile() {
           </label>
         </div>
 
-        {/* ... (rest of the component remains unchanged) */}
         <div className="grid gap-3 mt-6 p-5 pb-20">
           <label
             htmlFor="first-name"
             className="sm:grid sm:grid-cols-[1fr_calc(50%+96px)] sm:items-center sm:gap-6"
           >
-            <span className="text-gray-400 text-sm">First name*</span>
+            <span className="text-gray-400 text-sm block mb-2 sm:mb-0">
+              First name*
+            </span>
             <input
               type="text"
               name="first-name"
@@ -132,7 +153,7 @@ export default function Profile() {
               value={userInfo.firstName}
               onChange={handleFirstNameChange}
               required
-              className="p-3 px-4 border rounded"
+              className="p-3 px-4 border rounded w-full"
             />
           </label>
 
@@ -140,7 +161,9 @@ export default function Profile() {
             htmlFor="last-name"
             className="sm:grid sm:grid-cols-[1fr_calc(50%+96px)] sm:items-center sm:gap-6"
           >
-            <span className="text-gray-400 text-sm">Last name*</span>
+            <span className="text-gray-400 text-sm block mb-2 sm:mb-0">
+              Last name*
+            </span>
             <input
               type="text"
               name="last-name"
@@ -149,7 +172,7 @@ export default function Profile() {
               value={userInfo.lastName}
               onChange={handleLastNameChange}
               required
-              className="p-3 px-4 border rounded"
+              className="p-3 px-4 border rounded w-full"
             />
           </label>
 
@@ -157,7 +180,9 @@ export default function Profile() {
             htmlFor="email"
             className="sm:grid sm:grid-cols-[1fr_calc(50%+96px)] sm:items-center sm:gap-6"
           >
-            <span className="text-gray-400 text-sm">Email</span>
+            <span className="text-gray-400 text-sm block mb-2 sm:mb-0">
+              Email
+            </span>
             <input
               type="email"
               name="email"
@@ -166,19 +191,21 @@ export default function Profile() {
               value={userInfo.email}
               onChange={(e) => updateEmail(e.target.value)}
               required
-              className="p-3 px-4 border rounded"
+              className="p-3 px-4 border rounded w-full"
             />
           </label>
         </div>
 
-        <div className="absolute -bottom-6 -left-6 -right-6 p-4 border-t border-gray-200 sm:left-0 sm:right-0">
-          <Button
-            disabled={!userInfo.firstName || !userInfo.lastName}
-            onClick={handleSave}
-            className="sm:block sm:w-[91px] sm:ml-auto sm:mr-6"
-          >
-            Save
-          </Button>
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+          <div className="max-w-[900px] mx-auto flex justify-end">
+            <Button
+              disabled={!userInfo.firstName || !userInfo.lastName}
+              onClick={handleSave}
+              className="w-[91px]"
+            >
+              Save
+            </Button>
+          </div>
         </div>
       </section>
 

@@ -1,14 +1,18 @@
 // src/assets/platformicons/Phone.tsx
 
-import React from "react";
-import { UserData } from "@/types";
-import Image from "next/image";
+import React, { useContext } from "react";
+import { UserData, Link } from "@/types";
+import PreviewProfile from "@/components/previewProfile";
+import PreviewLink from "@/components/previewLink";
+import { DataContext } from "@/context/DataContext";
 
 interface PhoneProps {
   userData: UserData;
 }
 
 export default function Phone({ userData }: PhoneProps) {
+  const { imgPreviewPath } = useContext(DataContext);
+
   return (
     <div className="relative">
       <svg
@@ -31,32 +35,31 @@ export default function Phone({ userData }: PhoneProps) {
         />
       </svg>
 
-      <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center pt-[112px]">
-        {userData.userInfo?.profileImg && (
-          <Image
-            src={userData.userInfo.profileImg}
-            alt="Profile"
-            width={96}
-            height={96}
-            className="rounded-full mb-4"
+      <div className="absolute top-0 left-0 w-full h-full flex flex-col pb-[20px] px-4 overflow-hidden">
+        {/* User Info Section - 1/3 of the height */}
+        <div className="h-1/3 overflow-y-auto">
+          <PreviewProfile
+            bare
+            userData={{
+              ...userData,
+              userInfo: {
+                ...userData.userInfo,
+                profileImg: imgPreviewPath || userData.userInfo.profileImg,
+              },
+            }}
           />
-        )}
-        <h2 className="text-lg font-bold mb-1">
-          {`${userData.userInfo?.firstName || ""} ${userData.userInfo?.lastName || ""}`}
-        </h2>
-        <p className="text-sm text-gray-600 mb-6">
-          {userData.userInfo?.email || ""}
-        </p>
+        </div>
 
-        {userData.links?.map((link, index) => (
-          <div
-            key={index}
-            className="w-[237px] h-11 mb-4 rounded-lg flex items-center px-4"
-            style={{ backgroundColor: "#EEE" }}
-          >
-            <span>{link.platform}</span>
-          </div>
-        ))}
+        {/* Links Section - 2/3 of the height */}
+        <div className="h-2/3 overflow-y-auto mt-4">
+          {userData.links && userData.links.length > 0 && (
+            <div className="grid gap-y-4">
+              {userData.links.map((link: Link) => (
+                <PreviewLink key={link.id} link={link} bare />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

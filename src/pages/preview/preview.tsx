@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import PreviewHeader from "@/components/PreviewHeader";
 import { DataContext } from "@/context/DataContext";
 import { DataContextType, UserData } from "@/types";
-import PreviewProfile from "@/components/previewProfile";
 import Phone from "@/assets/platformicons/Phone";
 import { toast } from "react-toastify";
 
@@ -38,9 +37,6 @@ const PreviewPage: React.FC = () => {
       <div className="bg-white flex-grow" />
       <div className="absolute top-[15vh] left-0 right-0 flex flex-col items-center">
         <Phone userData={userData} />
-        <div className="mt-8">
-          <PreviewProfile userData={userData} bare />
-        </div>
       </div>
     </div>
   );

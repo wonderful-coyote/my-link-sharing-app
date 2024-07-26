@@ -35,8 +35,10 @@ export default function Home() {
         onSectionChange={setActiveSection}
       />
       <main className="flex flex-col lg:flex-row items-stretch justify-center min-h-screen bg-gray-100 p-4 lg:gap-4">
-        <section className="hidden lg:flex lg:w-1/3 p-4 bg-white items-center justify-center rounded-lg">
-          <Phone userData={userData} />
+        <section className="hidden lg:flex lg:w-1/3 p-4 bg-white items-start justify-center rounded-lg">
+          <div className="mt-32 w-full max-w-[308px]">
+            <Phone userData={userData} />
+          </div>
         </section>
         <section className="w-full lg:w-2/3 p-4 bg-white flex items-center justify-center rounded-lg">
           {activeSection === "links" ? <Links /> : <Profile />}
