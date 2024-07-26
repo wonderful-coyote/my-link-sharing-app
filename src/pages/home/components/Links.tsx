@@ -14,7 +14,6 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-
 import Button from "@/components/button";
 import NoLinks from "./NoLinks";
 import SortableLink from "./SortableLink";
@@ -29,7 +28,6 @@ export default function Links() {
   const { links, addLink, saveLinksToDb, reorderLinks } =
     useContext(DataContext) || {};
   const { validateURL, submitForm } = useForm(saveLinksToDb);
-
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -47,7 +45,6 @@ export default function Links() {
 
   const handleSave = () => {
     if (!links) return;
-
     let isValid = true;
     links.forEach((link) => {
       if (!validateURL(link)) {
@@ -77,9 +74,7 @@ export default function Links() {
 
   const handleDragEnd = (event: DragEndEvent) => {
     if (!links) return;
-
     const { active, over } = event;
-
     if (active.id !== over?.id) {
       const newIndex = links.findIndex((link: Link) => link.id === over?.id);
       reorderLinks(active.id as string, newIndex);
@@ -87,12 +82,14 @@ export default function Links() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Customize your links</h1>
-      <p className="text-gray-600 mb-6">
-        Add/edit/remove links below and then share all your profiles with the
-        world!
-      </p>
+    <section className="relative p-10 w-full max-w-[900px] mx-auto">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold mb-2">Customize your links</h1>
+        <p className="text-gray-600">
+          Add/edit/remove links below and then share all your profiles with the
+          world!
+        </p>
+      </div>
 
       <button
         onClick={handleAddLink}
@@ -101,36 +98,44 @@ export default function Links() {
         + Add new link
       </button>
 
-      {links && links.length > 0 ? (
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={links.map((link) => link.id)}
-            strategy={verticalListSortingStrategy}
+      <div className="mb-24">
+        {" "}
+        {/* Added margin-bottom for space */}
+        {links && links.length > 0 ? (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
           >
-            <div className="relative pb-20">
-              {links.map((link, index) => (
-                <SortableLink key={link.id} link={link} index={index} />
-              ))}
-            </div>
-          </SortableContext>
-        </DndContext>
-      ) : (
-        <NoLinks />
-      )}
+            <SortableContext
+              items={links.map((link) => link.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="relative pb-20">
+                {links.map((link, index) => (
+                  <SortableLink key={link.id} link={link} index={index} />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+        ) : (
+          <NoLinks />
+        )}
+      </div>
 
-      <Button
-        disabled={!links || links.length === 0}
-        onClick={handleSave}
-        className="py-3 mt-6 text-white font-bold bg-[#633CFF] rounded-lg hover:bg-[#633CFF] transition-colors duration-200"
-      >
-        Save
-      </Button>
+      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+        <div className="max-w-[900px] mx-auto flex justify-end">
+          <Button
+            disabled={!links || links.length === 0}
+            onClick={handleSave}
+            className="w-[91px] flex items-center justify-center" // Added flex and justify-center
+          >
+            Save
+          </Button>
+        </div>
+      </div>
 
       <ToastContainer />
-    </div>
+    </section>
   );
 }

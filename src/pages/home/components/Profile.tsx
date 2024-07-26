@@ -201,7 +201,7 @@ export default function Profile() {
             <Button
               disabled={!userInfo.firstName || !userInfo.lastName}
               onClick={handleSave}
-              className="w-[91px]"
+              className="w-[91px] flex items-center justify-center"
             >
               Save
             </Button>
