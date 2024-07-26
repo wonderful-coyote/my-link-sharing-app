@@ -24,7 +24,7 @@ export default function PreviewProfile({
     <section
       className={`grid w-fit mx-auto rounded-3xl text-center ${
         bare
-          ? "gap-y-[46px] pt-[113.5px] min-w-[20%]"
+          ? "gap-y-[46px] pt-[70px] min-w-[20%]"
           : "gap-y-14 mt-[60px] bg-white sm:p-12 sm:shadow-[0_0_32px_rgba(0,0,0,0.1)]"
       }`}
     >

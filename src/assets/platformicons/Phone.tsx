@@ -1,9 +1,6 @@
-// src/assets/platformicons/Phone.tsx
-
 import React, { useContext } from "react";
-import { UserData, Link } from "@/types";
+import { UserData } from "@/types";
 import PreviewProfile from "@/components/previewProfile";
-import PreviewLink from "@/components/previewLink";
 import { DataContext } from "@/context/DataContext";
 
 interface PhoneProps {
@@ -35,9 +32,9 @@ export default function Phone({ userData }: PhoneProps) {
         />
       </svg>
 
-      <div className="absolute top-0 left-0 w-full h-full flex flex-col pb-[20px] px-4 overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 bottom-[11px] flex flex-col overflow-hidden">
         {/* User Info Section - 1/3 of the height */}
-        <div className="h-1/3 overflow-y-auto">
+        <div className="overflow-y-auto pt-8 pb-8 px-4">
           <PreviewProfile
             bare
             userData={{
@@ -46,19 +43,9 @@ export default function Phone({ userData }: PhoneProps) {
                 ...userData.userInfo,
                 profileImg: imgPreviewPath || userData.userInfo.profileImg,
               },
+              links: userData.links?.slice(0, 5) || [], // Limit links to 5
             }}
           />
-        </div>
-
-        {/* Links Section - 2/3 of the height */}
-        <div className="h-2/3 overflow-y-auto mt-4">
-          {userData.links && userData.links.length > 0 && (
-            <div className="grid gap-y-4">
-              {userData.links.map((link: Link) => (
-                <PreviewLink key={link.id} link={link} bare />
-              ))}
-            </div>
-          )}
         </div>
       </div>
     </div>
